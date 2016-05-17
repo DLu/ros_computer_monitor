@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+import rospy
+from ros_hard_drive.df import df
+from ros_computer_msgs.msg import Drive, HardDrives
+
+class ROSHD:
+    def __init__(self):
+        rospy.init_node('ros_hard_drive')
+        self.pub = rospy.Publisher('/hard_drive_space', HardDrives, queue_size=1)
+        self.drives = rospy.get_param('~drives', [])
+        freq = rospy.get_param('~frequency', 1.0)
+        self.timer = rospy.Timer(rospy.Duration(1.0/freq), self.publish)
+
+    def publish(self, event=None):
+        hd = HardDrives()
+        for drive_info in df(self.drives):
+            d = Drive()
+            d.drive = drive_info['Filesystem']
+            d.mount_point = drive_info['MountPoint']
+            d.used_kb = int(drive_info['Used'])
+            d.total_kb = int(drive_info['1K-blocks'])
+            hd.drives.append(d)
+        self.pub.publish(hd)
+
+if __name__=='__main__':
+    rt = ROSHD()
+    rospy.spin()
+
