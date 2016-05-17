@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import rospy
+from ros_computer_msgs.msg import Process, CPUUsage
+from ros_top.node_info import NodeInfo
+
+NODE_FIELDS   = ['pid', 'get_cpu_percent', 'get_memory_percent', 'get_num_threads']
+
+class ROSTop:
+    def __init__(self):
+        rospy.init_node('ros_top')
+        self.pub = rospy.Publisher('/cpu_usage', CPUUsage, queue_size=1)
+        self.node_info = NodeInfo()
+        freq = rospy.get_param('~frequency', 1.0)
+        self.timer = rospy.Timer(rospy.Duration(1.0/freq), self.publish)
+
+    def publish(self, event=None):
+        cpu = CPUUsage()
+        for info in self.node_info.get_all_node_fields(NODE_FIELDS):
+            p = Process()
+            p.name = info['node_name']
+            p.command = ' '.join(info['cmdline'])
+            for field in ['pid', 'cpu_percent', 'memory_percent', 'num_threads']:
+                setattr(p, field, info[field])
+            cpu.processes.append(p)
+        self.pub.publish(cpu)
+
+if __name__=='__main__':
+    rt = ROSTop()
+    rospy.spin()
