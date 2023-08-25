@@ -1,21 +1,17 @@
 <?xml version="1.0"?>
-<package>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>ros_top</name>
   <version>0.4.1</version>
   <description>For monitoring ROS processes.</description>
 
-  <author email="dan@lazewatsky.com">Dan Lazewatsky</author>
   <maintainer email="dan@lazewatsky.com">Dan Lazewatsky</maintainer>
-  <license>BSD</license>
-
-  <url type="website">http://ros.org/wiki/ros_top</url>
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>rosnode</build_depend>
-  <build_depend>rospy</build_depend>
-  <build_depend>ros_computer_msgs</build_depend>
-
-  <run_depend>python-psutil</run_depend>
-  <run_depend>rospy</run_depend>
-  <run_depend>rosnode</run_depend>
-  <run_depend>ros_computer_msgs</run_depend>
+  <license>BSD 3-clause</license>
+  <author email="dan@lazewatsky.com">Dan Lazewatsky</author>
+  <depend>computer_msgs</depend>
+  <depend>rclpy</depend>
+  <exec_depend>python3-psutil</exec_depend>
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
 </package>
