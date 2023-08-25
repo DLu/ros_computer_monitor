@@ -49,13 +49,16 @@ class ROSTop(Node):
 
     def publish(self, event=None):
         cpu = CPUUsage()
-        for pid, process in self.processes.items():
-            p = Process()
-            p.pid = process.pid
-            p.command = ' '.join(process.cmdline())
-            for field in ['name', 'cpu_percent', 'memory_percent', 'num_threads']:
-                setattr(p, field, getattr(process, field)())
-            cpu.processes.append(p)
+        for pid, process in list(self.processes.items()):
+            try:
+                p = Process()
+                p.pid = pid
+                p.command = ' '.join(process.cmdline())
+                for field in ['name', 'cpu_percent', 'memory_percent', 'num_threads']:
+                    setattr(p, field, getattr(process, field)())
+                cpu.processes.append(p)
+            except psutil.NoSuchProcess:
+                del self.processes[pid]
         self.pub.publish(cpu)
 
 def main(args=None):

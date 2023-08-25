@@ -17,5 +17,5 @@ setup(
     license='BSD 3-clause',
     maintainer='Dan Lazewatsky',
     maintainer_email='dan@lazewatsky.com',
-    entry_points={'console_scripts': ['ros_top = ros_top.ros_top:main']},
+    entry_points={'console_scripts': ['ros_top = ros_top.ros_top:main', 'viz = ros_top.viz:main', 'bag_viz = ros_top.bag_viz:main']},
 )
